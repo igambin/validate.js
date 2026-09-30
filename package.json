@@ -1,6 +1,7 @@
 {
-  "name": "validate.js",
-  "version": "0.13.1",
+  "name": "@rwest-riskit/validate.js",
+  "version": "0.13.2",
+  "maintainers": ["Ingo Gambin <ingo.gambin@rwe.com>"],
   "author": "Nicklas Ansman <nicklas@ansman.se>",
   "description": "Declarative validations for JavaScript",
   "main": "validate.js",
@@ -8,7 +9,7 @@
   "homepage": "http://validatejs.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ansman/validate.js.git"
+    "url": "https://github.com/igambin/validatejs.git"
   },
   "files": [
     "typings.json",
