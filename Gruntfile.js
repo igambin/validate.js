@@ -21,78 +21,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    watch: {
-      jshintGruntfile: {
-        files: 'Gruntfile.js',
-        tasks: ['jshint:gruntfile'],
-        options: {
-          atBegin: true
-        }
-      },
-      jshintSrc: {
-        files: '<%= pkg.name %>',
-        tasks: ['jshint:validate'],
-        options: {
-          atBegin: true
-        }
-      },
-      jshintSpecs: {
-        files: 'specs/**/*.js',
-        tasks: ['jshint:specs'],
-        options: {
-          atBegin: true
-        }
-      },
-      specs: {
-        files: ['specs/**/*.js', '<%= pkg.name %>'],
-        tasks: ['jasmine:specs', 'jasmine:coverage'],
-        options: {
-          atBegin: true
-        }
-      }
-    },
-    jasmine: {
-      specs: {
-        src: "<%= pkg.name %>",
-        options: {
-          keepRunner: true,
-          vendor: "specs/vendor/**/*.js",
-          specs: "specs/**/*-spec.js",
-          helpers: "specs/helpers.js",
-          display: "short",
-          summary: true
-        }
-      },
-      coverage: {
-        src: "<%= jasmine.specs.src %>",
-        options: {
-          vendor: "<%= jasmine.specs.options.vendor %>",
-          specs: "<%= jasmine.specs.options.specs %>",
-          helpers: "<%= jasmine.specs.options.helpers %>",
-          display: "none",
-          template: require('grunt-template-jasmine-istanbul'),
-          templateOptions: {
-            coverage: 'coverage.json',
-            report: [{
-              type: 'text-summary'
-            }, {
-              type: 'lcovonly'
-            }, {
-              type: 'html',
-              options: {
-                dir: 'coverage'
-              }
-            }]
-          }
-        }
-      }
-    },
-    docco: {
-      src: "<%= pkg.name %>",
-      options: {
-        output: 'docs'
-      }
-    },
     uglify: {
       options: {
         report: 'gzip',
@@ -114,14 +42,28 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-docco');
-  grunt.loadNpmTasks('grunt-notify');
+
+  function nodeTask(name, args) {
+    grunt.registerTask(name, function() {
+      var done = this.async();
+      grunt.util.spawn({
+        cmd: process.execPath,
+        args: args,
+        opts: {stdio: 'inherit'}
+      }, function(error) {
+        done(!error);
+      });
+    });
+  }
+
+  nodeTask('specs', [require.resolve('c8/bin/c8.js'), '--include=validate.js',
+    '--reporter=text-summary', '--reporter=lcov', 'node', 'scripts/test.cjs']);
+  nodeTask('docco', [require.resolve('docco/bin/docco'), 'validate.js']);
+  nodeTask('watch', ['scripts/watch.cjs']);
 
   grunt.registerTask('default', 'watch');
-  grunt.registerTask('build', ['jshint:validate', 'jasmine:specs', 'uglify', 'docco']);
-  grunt.registerTask('test', ['jshint', 'jasmine']);
+  grunt.registerTask('build', ['test', 'uglify', 'docco']);
+  grunt.registerTask('test', ['jshint', 'specs']);
 };

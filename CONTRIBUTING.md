@@ -13,13 +13,17 @@ The tests are automatically run when opening a pull request but to make sure
 they don't fail you can run the tests by running this command:
 
 ```
-$ grunt test
+$ pnpm test
 ```
 
 Code style
 ---
-Your code should match the overall code style of the project. Running `grunt test`
+Your code should match the overall code style of the project. Running `pnpm test`
 will also check your code against JSHint.
+
+Install the pinned development dependencies with
+`pnpm install --frozen-lockfile --ignore-scripts`. Do not approve dependency
+builds. Run `pnpm audit` after dependency changes and include the updated lockfile.
 
 Building
 ---

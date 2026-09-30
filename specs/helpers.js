@@ -13,7 +13,7 @@ beforeEach(function() {
       return {
         compare: function(actual, expected) {
           return {
-            pass: actual.calls.any(function(call) {
+            pass: actual.calls.all().some(function(call) {
               return call.object === expected;
             })
           };

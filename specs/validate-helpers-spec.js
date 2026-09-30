@@ -1,4 +1,4 @@
-describe("validate", function() {
+describe("validate helpers", function() {
   describe('extend', function() {
     it("extends the first argument with the remaining arguments", function() {
       var obj = {};

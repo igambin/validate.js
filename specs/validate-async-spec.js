@@ -272,15 +272,17 @@ describe("validate.async", function() {
     });
 
     it.promise("calls the wrapper function with the new keyword", function() {
-      var wrapper = jasmine.createSpy("wrapper").and.callFake(function(errors) {
-        expect(this.constructor).toBe(wrapper);
+      var called = jasmine.createSpy("wrapper called");
+      function wrapper(errors) {
+        expect(this instanceof wrapper).toBe(true);
+        called();
         return errors;
-      });
+      }
 
       return validate.async({}, {foo: {presence: true}}, {wrapErrors: wrapper}).then(success, error).then(function() {
         expect(error).toHaveBeenCalled();
         expect(success).not.toHaveBeenCalled();
-        expect(wrapper).toHaveBeenCalled();
+        expect(called).toHaveBeenCalled();
       });
     });
   });

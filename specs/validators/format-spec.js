@@ -37,7 +37,7 @@ describe("validators.format", function() {
     expect(format(3, options2)).toBeDefined();
   });
 
-  it("non strings are not allowed", function() {
+  it("numbers are not allowed", function() {
     expect(format(3, options1)).toBeDefined();
     expect(format(3, options2)).toBeDefined();
   });
